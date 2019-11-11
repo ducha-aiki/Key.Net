@@ -31,7 +31,7 @@ def extract_multiscale_features():
 
     parser = argparse.ArgumentParser(description='HSequences Extract Features')
 
-    parser.add_argument('--list-images', type=str, help='File containing the image paths for extracting features.',
+    parser.add_argument('--imgs-dir', type=str, help='File containing the image paths for extracting features.',
                         required=True)
 
     parser.add_argument('--results-dir', type=str, default='extracted_features/',
@@ -277,12 +277,12 @@ def extract_multiscale_features():
 
             # read image and extract keypoints and descriptors
             from tqdm import tqdm
-            with open(args.list_images, "r") as f:
-                lines = f.readlines()
-            f = [l.strip() for l in lines]
-            
-            for i, path_to_image in tqdm(enumerate(f), ascii=True, total = len(f)):
-                path = path_to_image#.split('\n')[0]
+            #with open(args.list_images, "r") as f:
+            #    lines = f.readlines()
+            #f = [l.strip() for l in lines]
+            img_fnames = [x for x in os.listdir(args.imgs_dir) if x.endswith('.jpg')]
+            for i, path_to_image in tqdm(enumerate(img_fnames), ascii=True, total = len(img_fnames)):
+                path = os.path.join(args.imgs_dir, path_to_image)#.split('\n')[0]
 
                 if not os.path.exists(path):
                     print('[ERROR]: File {0} not found!'.format(path))
