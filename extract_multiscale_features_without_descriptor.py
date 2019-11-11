@@ -83,7 +83,7 @@ def extract_multiscale_features():
     parser.add_argument('--random-seed', type=int, default=12345,
                         help='The random seed value for TensorFlow and Numpy.')
 
-    parser.add_argument('--pyramid_levels', type=int, default=6,
+    parser.add_argument('--pyramid_levels', type=int, default=5,
                         help='The number of downsample levels in the pyramid.')
 
     parser.add_argument('--upsampled-levels', type=int, default=1,
@@ -283,11 +283,14 @@ def extract_multiscale_features():
             img_fnames = [x for x in os.listdir(args.imgs_dir) if x.endswith('.jpg')]
             for i, path_to_image in tqdm(enumerate(img_fnames), ascii=True, total = len(img_fnames)):
                 path = os.path.join(args.imgs_dir, path_to_image)#.split('\n')[0]
-
                 if not os.path.exists(path):
                     print('[ERROR]: File {0} not found!'.format(path))
-                    return
+                    continue
                 img_fname = path.split('/')[-1]
+                file_name = os.path.join(args.results_dir, version_network_name, img_fname)+'.kpt'
+                if os.path.isfile(file_name + '.npy'):
+                    print (file_name, 'exists, skipping')
+                    continue
                 create_result_dir(os.path.join(args.results_dir, version_network_name, img_fname))
 
                 im = read_bw_image(path)
@@ -296,7 +299,6 @@ def extract_multiscale_features():
 
                 im_pts= extract_features(im)
 
-                file_name = os.path.join(args.results_dir, version_network_name, img_fname)+'.kpt'
                 np.save(file_name, im_pts)
 
                 #file_name = os.path.join(args.results_dir, version_network_name, path)+'.dsc'
