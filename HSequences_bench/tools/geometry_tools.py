@@ -106,8 +106,8 @@ def find_index_higher_scores(map, num_points = 1000, threshold = -1):
         order_array = np.sort(flatten)
 
         order_array = np.flip(order_array, axis=0)
-
-        threshold = order_array[num_points-1]
+        
+        threshold = order_array[min(num_points-1, len(flatten)-1)]
         if threshold <= 0.0:
             indexes = np.argwhere(order_array > 0.0)
             if len(indexes) == 0:
